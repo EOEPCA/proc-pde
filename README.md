@@ -11,7 +11,7 @@ It provides a sandboxed environment in which the user can test the deployment an
 You can use the built image and do:
 
 ```bash
-docker run --rm -it -p 8889:8889 -p 8890:8888  centos-pde:latest start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
+docker run --rm -it -p 8889:8889 -p 8890:8888 eoepca/centos-pde:latest start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
 ```
 
 Or build and run with docker compose:
