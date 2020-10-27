@@ -8,8 +8,6 @@ ADD centos/install-yum.bash /tmp/install-yum.bash
 ADD centos/yum.list /tmp/yum.list
 RUN set -x && chmod 755 /tmp/install-yum.bash && /tmp/install-yum.bash
 
-#RUN yum install -y wget which unzip mlocate tree gitflow git gzip tar unzip file bzip2 gcc gcc-c++ maven make Xvfb
-
 ENV NB_USER=jovyan \
     NB_UID=1000 \
     NB_GID=100 \
@@ -50,14 +48,6 @@ ADD centos/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
 # data
 RUN mkdir -p /workspace/data && chown -R ${NB_USER}:${NB_GID} /workspace
 
-# templates
-
-#COPY templates /tmp/templates
-
-#ADD install-templates.bash /tmp/install-templates.bash
-
-#RUN chmod 755 /tmp/install-templates.bash && /tmp/install-templates.bash
-
 RUN chown -R ${NB_USER}:${NB_GID} /workspace
 
 # clean-up
@@ -69,12 +59,9 @@ RUN mkdir -p /usr/local/share/jupyter && chown -R $NB_USER:$NB_GID /usr/local/sh
 # fix permissions
 RUN chown -R $NB_USER:$NB_GID ${HOME} 
 
-#RUN find ${HOME} -type f -name '* *.ipynb' | while read file; do chown $NB_USER:$NB_GID "$file"; done 
-#RUN find /workspace -type f -name '* *.ipynb' | while read file; do chown $NB_USER:$NB_GID "$file"; done
-
 RUN mkdir /opt/theia && chown -R $NB_USER:$NB_GID /opt/theia
 
-RUN yum group install -y "Development Tools"
+
 
 ADD centos/start /usr/bin/start
 
@@ -92,14 +79,17 @@ RUN source ${HOME}/.bashrc && nvm install 12 && npm install -g yarn
 
 RUN source ${HOME}/.bashrc
 
-ADD package.json /opt/theia/package.json
-
-#THEIA_ELECTRON_SKIP_REPLACE_FFMPEG=1 yarn
+ADD centos/package.json /opt/theia/package.json
 
 RUN source /home/jovyan/.bashrc && cd /opt/theia && THEIA_ELECTRON_SKIP_REPLACE_FFMPEG=1 yarn 
 
-RUN source /home/jovyan/.bashrc && cd /opt/theia &&  yarn theia build
+RUN source /home/jovyan/.bashrc && cd /opt/theia &&  yarn theia build 
 
-#RUN source /home/jovyan/.bashrc && cd /opt/theia &&  yarn start /home/jovyan --hostname 0.0.0.0 --port 8888
+RUN source /home/jovyan/.bashrc && yarn cache clean
 
-#RUN conda install cwl-wrapper cwl2atom cwltool
+#USER root
+
+# jupyter config
+#ADD centos/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
+
+#USER ${NB_USER}

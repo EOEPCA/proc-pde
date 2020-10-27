@@ -15,3 +15,6 @@ gcc-c++
 maven
 make
 Xvfb
+zlib-devel
+perl-ExtUtils-MakeMaker
+curl-devel

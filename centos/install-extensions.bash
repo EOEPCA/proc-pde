@@ -34,9 +34,9 @@ ${NB_PYTHON_PREFIX}/bin/pip install sidecar
 ${NB_PYTHON_PREFIX}/bin/jupyter labextension install @jupyter-widgets/jupyterlab-sidecar
 
 # templates
-${NB_PYTHON_PREFIX}/bin/pip install jupyterlab_templates
-${NB_PYTHON_PREFIX}/bin/jupyter labextension install jupyterlab_templates
-${NB_PYTHON_PREFIX}/bin/jupyter serverextension enable jupyterlab_templates --py 
+#${NB_PYTHON_PREFIX}/bin/pip install jupyterlab_templates
+#${NB_PYTHON_PREFIX}/bin/jupyter labextension install jupyterlab_templates
+#${NB_PYTHON_PREFIX}/bin/jupyter serverextension enable jupyterlab_templates --py 
 
 # bash kernel
 ${NB_PYTHON_PREFIX}/bin/pip install bash_kernel
@@ -68,9 +68,9 @@ ${NB_PYTHON_PREFIX}/bin/jupyter labextension install @aquirdturtle/collapsible_h
 
 
 # server proxy
-#${NB_PYTHON_PREFIX}/bin/pip install jupyter-server-proxy
+${NB_PYTHON_PREFIX}/bin/pip install jupyter-server-proxy
 #${NB_PYTHON_PREFIX}/bin/jupyter serverextension enable --sys-prefix jupyter_server_proxy
-
+${NB_PYTHON_PREFIX}/bin/jupyter labextension install @jupyterlab/server-proxy
 # theia
 # see https://discourse.jupyter.org/t/unable-to-get-jupyter-server-proxy-working-on-theia/3104/4
 #curl -o- -L https://yarnpkg.com/install.sh | bash
