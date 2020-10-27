@@ -11,8 +11,8 @@ before_script:
   - docker pull "$IMAGE_NAME_CENTOS" || true
   - docker pull "$IMAGE_NAME_DEBIAN" || true
 script:
-  - docker build -f centos-pde/Dockerfile --pull --cache-from "$IMAGE_NAME_CENTOS" --tag "$IMAGE_NAME_CENTOS" .
-  - docker build -f debian-pde/Dockerfile --pull --cache-from "$IMAGE_NAME_DEBIAN" --tag "$IMAGE_NAME_DEBIAN" .
+  - docker build -f centos/Dockerfile --pull --cache-from "$IMAGE_NAME_CENTOS" --tag "$IMAGE_NAME_CENTOS" .
+  - docker build -f debian/Dockerfile --pull --cache-from "$IMAGE_NAME_DEBIAN" --tag "$IMAGE_NAME_DEBIAN" .
   
 after_script:
   - docker images

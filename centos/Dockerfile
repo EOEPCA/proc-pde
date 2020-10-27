@@ -45,7 +45,7 @@ ADD centos/install-extensions.bash /tmp/install-extensions.bash
 RUN chmod 755 /tmp/install-extensions.bash && /tmp/install-extensions.bash
 
 # jupyter config
-ADD jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
+ADD centos/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
 
 # data
 RUN mkdir -p /workspace/data && chown -R ${NB_USER}:${NB_GID} /workspace
