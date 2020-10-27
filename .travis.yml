@@ -20,6 +20,8 @@ after_script:
 before_deploy:
   - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
   - docker tag "$IMAGE_NAME_CENTOS" "${IMAGE_NAME_CENTOS}:latest"
+  - docker tag "$IMAGE_NAME_CENTOS" "${IMAGE_NAME_CENTOS}:${VERSION}"
+#  - docker tag "$IMAGE_NAME_DEBIAN" "${IMAGE_NAME_DEBIAN}:latest"
 #  - docker tag "$IMAGE_NAME_DEBIAN" "${IMAGE_NAME_DEBIAN}:${VERSION}"
 deploy:
   provider: script
