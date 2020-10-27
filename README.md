@@ -19,10 +19,10 @@ Or build and run with docker compose:
 ```bash
 git clone https://github.com/EOEPCA/proc-pde.git
 
-cd proc-pde/centos
+cd proc-pde
 docker-compose build centos-pde
 
-docker-compose up
+docker-compose up centos-pde
 ```
 
 Open the browser at the URL 0.0.0.0:8890 or 127.0.0.1:8890 to access the JupyterLab interface
