@@ -51,11 +51,11 @@ ENV KERNEL_PYTHON_PREFIX ${NB_PYTHON_PREFIX}
 
 ENV PATH ${NB_PYTHON_PREFIX}/bin:${CONDA_DIR}/bin:${NPM_DIR}/bin:${PATH}
 
-COPY debian-pde/activate-conda.sh /etc/profile.d/activate-conda.sh
+COPY debian/activate-conda.sh /etc/profile.d/activate-conda.sh
 
-COPY debian-pde/environment.yml /tmp/environment.yml
+COPY debian/environment.yml /tmp/environment.yml
 
-COPY debian-pde/install-miniforge.bash /tmp/install-miniforge.bash
+COPY debian/install-miniforge.bash /tmp/install-miniforge.bash
 
 RUN mkdir -p ${NPM_DIR} && chown -R ${NB_USER}:${NB_USER} ${NPM_DIR}
 
