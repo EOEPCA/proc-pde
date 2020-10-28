@@ -21,19 +21,16 @@ ENV NB_USER=jovyan \
     
 ENV USER=${NB_USER} \
     NB_UID=${NB_UID} \
-    HOME=/home/${NB_USER} 
-
+    HOME=/home/${NB_USER} \
+    PATH=$NB_PYTHON_PREFIX/bin:$CONDA_DIR/bin:$PATH
+    
 ADD centos/fix-permissions /usr/local/bin/fix-permissions
 
 RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
     chmod g+w /etc/passwd /etc/group && \
     fix-permissions $HOME
 
-RUN groupadd docker -g 5003
-
-RUN yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-
-RUN yum install -y docker-ce docker-ce-cli containerd.io
+#RUN groupadd docker -g 5003
 
 RUN usermod -a -G docker jovyan
 
@@ -43,8 +40,6 @@ ADD centos/install-miniforge.bash /tmp/install-miniforge.bash
 ADD centos/environment.yml /tmp/environment.yml
 
 RUN chmod 755 /tmp/install-miniforge.bash && /tmp/install-miniforge.bash
-
-ENV PATH=$NB_PYTHON_PREFIX/bin:$CONDA_DIR/bin:$PATH
 
 # extensions
 ADD centos/install-extensions.bash /tmp/install-extensions.bash

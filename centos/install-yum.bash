@@ -6,6 +6,12 @@ rm -f /tmp/yum.list
 
 yum group install -y "Development Tools"
 
+# docker
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+yum install -y docker-ce docker-ce-cli containerd.io
+
+
 # install git >= 2.11
 wget https://github.com/git/git/archive/v2.28.0.tar.gz -O git.tar.gz
 
@@ -24,5 +30,12 @@ cd ..
 rm -fr git-*
 
 yum clean all -y
+
+curl -OL https://raw.github.com/nvie/gitflow/develop/contrib/gitflow-installer.sh
+chmod +x gitflow-installer.sh
+
+./gitflow-installer.sh
+
+rm -f ./gitflow-installer.sh
 
 exit ${res}
