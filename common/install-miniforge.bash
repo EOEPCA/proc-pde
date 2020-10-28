@@ -42,6 +42,11 @@ echo 'update_dependencies: false' >> ${CONDA_DIR}/.condarc
 # avoid future changes to default channel_priority behavior
 conda config --system --set channel_priority "flexible"
 
+# widgets
+conda install -y widgetsnbextension nodejs ipyleaflet
+jupyter nbextension enable --py --sys-prefix widgetsnbextension
+jupyter nbextension enable --py --sys-prefix ipyleaflet
+
 echo "installing notebook env:"
 cat /tmp/environment.yml
 conda env create -p ${NB_PYTHON_PREFIX} -f /tmp/environment.yml
@@ -80,7 +85,10 @@ rm ${INSTALLER_PATH}
 # Remove the pip cache created as part of installing miniforge
 rm -rf /root/.cache
 
-chown -R $NB_USER:$NB_USER ${CONDA_DIR}
+chown -R $NB_USER:$NB_GID ${CONDA_DIR}
 
 conda list -n root
 conda list -p ${NB_PYTHON_PREFIX}
+
+
+

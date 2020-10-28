@@ -35,19 +35,19 @@ RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
 RUN usermod -a -G docker jovyan
 
 # conda installation via miniforge
-ADD centos/install-miniforge.bash /tmp/install-miniforge.bash
+ADD common/install-miniforge.bash /tmp/install-miniforge.bash
 
-ADD centos/environment.yml /tmp/environment.yml
+ADD common/environment.yml /tmp/environment.yml
 
 RUN chmod 755 /tmp/install-miniforge.bash && /tmp/install-miniforge.bash
 
 # extensions
-ADD centos/install-extensions.bash /tmp/install-extensions.bash
+ADD common/install-extensions.bash /tmp/install-extensions.bash
 
 RUN chmod 755 /tmp/install-extensions.bash && /tmp/install-extensions.bash
 
 # jupyter config
-ADD centos/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
+ADD common/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
 
 # data
 RUN mkdir -p /workspace/data && chown -R ${NB_USER}:${NB_GID} /workspace
@@ -55,7 +55,7 @@ RUN mkdir -p /workspace/data && chown -R ${NB_USER}:${NB_GID} /workspace
 RUN chown -R ${NB_USER}:${NB_GID} /workspace
 
 # clean-up
-RUN rm -f /tmp/install-*.bash && rm -f /tmp/environment.yml # && rm -fr /tmp/templates
+RUN rm -f /tmp/install-*.bash && rm -f /tmp/environment.yml 
 
 # for binder additional kernels
 RUN mkdir -p /usr/local/share/jupyter && chown -R $NB_USER:$NB_GID /usr/local/share/jupyter
@@ -81,7 +81,7 @@ RUN source ${HOME}/.bashrc && nvm install 12 && npm install -g yarn
 
 RUN source ${HOME}/.bashrc
 
-ADD centos/package.json /opt/theia/package.json
+ADD common/package.json /opt/theia/package.json
 
 RUN source /home/jovyan/.bashrc && cd /opt/theia && THEIA_ELECTRON_SKIP_REPLACE_FFMPEG=1 yarn 
 
