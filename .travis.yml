@@ -5,7 +5,7 @@ env:
   global:
     - IMAGE_NAME_CENTOS=eoepca/centos-pde
     - IMAGE_NAME_DEBIAN=eoepca/debian-pde
-    - VERSION=0.2
+    - VERSION=0.3
 
 before_script:
   - docker pull "$IMAGE_NAME_CENTOS" || true
