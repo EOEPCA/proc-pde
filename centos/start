@@ -1,5 +1,9 @@
 #!/bin/bash
 
+chown :docker /var/run/docker.sock
+
+chmod g+rw /var/run/docker.sock 
+
 source /home/jovyan/.bashrc 
 
 cd /opt/theia

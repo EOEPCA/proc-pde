@@ -16,3 +16,4 @@ dependencies:
   - cwl2atom 
   - cwltool
   - jupyter-server-proxy
+  - cookiecutter

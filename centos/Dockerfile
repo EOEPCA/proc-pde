@@ -1,6 +1,7 @@
 FROM centos:7 
 
 MAINTAINER Terradue S.r.l
+
 USER root
 
 # yum
@@ -27,6 +28,14 @@ ADD centos/fix-permissions /usr/local/bin/fix-permissions
 RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
     chmod g+w /etc/passwd /etc/group && \
     fix-permissions $HOME
+
+RUN groupadd docker -g 5003
+
+RUN yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+RUN yum install -y docker-ce docker-ce-cli containerd.io
+
+RUN usermod -a -G docker jovyan
 
 # conda installation via miniforge
 ADD centos/install-miniforge.bash /tmp/install-miniforge.bash
@@ -61,8 +70,6 @@ RUN chown -R $NB_USER:$NB_GID ${HOME}
 
 RUN mkdir /opt/theia && chown -R $NB_USER:$NB_GID /opt/theia
 
-
-
 ADD centos/start /usr/bin/start
 
 USER ${NB_USER}
@@ -87,9 +94,3 @@ RUN source /home/jovyan/.bashrc && cd /opt/theia &&  yarn theia build
 
 RUN source /home/jovyan/.bashrc && yarn cache clean
 
-#USER root
-
-# jupyter config
-#ADD centos/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
-
-#USER ${NB_USER}
