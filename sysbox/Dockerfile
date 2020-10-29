@@ -1,4 +1,5 @@
-FROM nestybox/ubuntu-bionic-systemd-docker:latest
+FROM nestybox/ubuntu-bionic-docker:latest 
+#ubuntu-bionic-systemd-docker:latest
 
 ENV LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
@@ -13,11 +14,11 @@ ENV NB_USER=jovyan \
 ENV USER=${NB_USER} \ 
     HOME=/home/${NB_USER}
     
-RUN useradd --comment "Default user" --create-home --gid ${NB_GID} --no-log-init --shell /bin/bash --uid ${NB_UID} ${NB_USER}
+RUN groupadd --gid ${NB_GID} ${NB_USER} && useradd --comment "Default user" --create-home --gid ${NB_GID} --no-log-init --shell /bin/bash --uid ${NB_UID} ${NB_USER}
 
 RUN apt-get -qq update && apt-get -qq install --yes apt-utils 
 
-RUN apt-get -qq install --yes wget
+RUN apt-get -qq install --yes wget make g++
 
 RUN wget --quiet -O - https://deb.nodesource.com/gpgkey/nodesource.gpg.key |  apt-key add - && DISTRO="bionic" && echo "deb https://deb.nodesource.com/node_10.x $DISTRO main" >> /etc/apt/sources.list.d/nodesource.list && echo "deb-src https://deb.nodesource.com/node_10.x $DISTRO main" >> /etc/apt/sources.list.d/nodesource.list
 
@@ -84,10 +85,6 @@ RUN . "$NVM_DIR/nvm.sh" && npm config delete prefix && nvm install 12 &&  npm in
 
 ADD common/package.json ${APP_BASE}/theia/package.json
 
-USER root
-
-RUN apt-get -qq update && apt-get -qq install --yes --no-install-recommends make g++
-
 USER ${NB_USER}
 
 RUN . "$NVM_DIR/nvm.sh" && cd ${APP_BASE}/theia && THEIA_ELECTRON_SKIP_REPLACE_FFMPEG=1 yarn 
@@ -97,3 +94,7 @@ RUN . "$NVM_DIR/nvm.sh" && cd ${APP_BASE}/theia &&  yarn theia build
 RUN . "$NVM_DIR/nvm.sh" && yarn cache clean
 
 WORKDIR /workspace
+
+USER root
+
+RUN service docker start
