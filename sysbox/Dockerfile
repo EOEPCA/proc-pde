@@ -1,10 +1,4 @@
-FROM buildpack-deps:bionic
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get -qq update && apt-get -qq install --yes --no-install-recommends locales > /dev/null && apt-get -qq purge && apt-get -qq clean && rm -rf /var/lib/apt/lists/*
-
-RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen &&     locale-gen
+FROM nestybox/ubuntu-bionic-systemd-docker:latest
 
 ENV LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
@@ -13,30 +7,27 @@ ENV LC_ALL=en_US.UTF-8 \
 
 
 ENV NB_USER=jovyan \
-    NB_UID=1000 \
-    NB_GID=100 
+    NB_UID=1001 \
+    NB_GID=101 
     
 ENV USER=${NB_USER} \ 
     HOME=/home/${NB_USER}
+    
+RUN useradd --comment "Default user" --create-home --gid ${NB_GID} --no-log-init --shell /bin/bash --uid ${NB_UID} ${NB_USER}
 
-RUN groupadd --gid ${NB_GID} ${NB_USER} && useradd --comment "Default user" --create-home --gid ${NB_GID} --no-log-init --shell /bin/bash --uid ${NB_UID} ${NB_USER}
+RUN apt-get -qq update && apt-get -qq install --yes apt-utils 
+
+RUN apt-get -qq install --yes wget
 
 RUN wget --quiet -O - https://deb.nodesource.com/gpgkey/nodesource.gpg.key |  apt-key add - && DISTRO="bionic" && echo "deb https://deb.nodesource.com/node_10.x $DISTRO main" >> /etc/apt/sources.list.d/nodesource.list && echo "deb-src https://deb.nodesource.com/node_10.x $DISTRO main" >> /etc/apt/sources.list.d/nodesource.list
 
 RUN apt-get -qq update && apt-get -qq install --yes --no-install-recommends less nodejs unzip git-flow > /dev/null && apt-get -qq purge && apt-get -qq clean && rm -rf /var/lib/apt/lists/*
 
-# nextcloud
-#COPY nextcloud-client.list /etc/apt/sources.list.d/nextcloud-client.list
-#RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1FCD77DD0DBEF5699AD2610160EE47FBAD3DD469
-#RUN apt-get -qq update && apt -qq install --yes --no-install-recommends nextcloud-client  > /dev/null && apt-get -qq purge && apt-get -qq clean && rm -rf /var/lib/apt/lists/*
-
 EXPOSE 8888
 
 ENV APP_BASE=/srv 
-#ENV NPM_DIR=${APP_BASE}/npm 
-#ENV NPM_CONFIG_GLOBALCONFIG=${NPM_DIR}/npmrc \
+
 ENV CONDA_DIR=${APP_BASE}/conda 
-    
     
 ENV NB_PYTHON_PREFIX=${CONDA_DIR}/envs/notebook 
 
@@ -48,12 +39,6 @@ COPY debian/activate-conda.sh /etc/profile.d/activate-conda.sh
 COPY common/environment.yml /tmp/environment.yml
 
 COPY common/install-miniforge.bash /tmp/install-miniforge.bash
-
-COPY debian/docker.list /etc/apt/sources.list.d/docker.list
-
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-
-RUN apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io
 
 # miniforge
 RUN bash /tmp/install-miniforge.bash && rm /tmp/install-miniforge.bash /tmp/environment.yml
@@ -98,6 +83,12 @@ ENV NVM_DIR=$HOME/.nvm
 RUN . "$NVM_DIR/nvm.sh" && npm config delete prefix && nvm install 12 &&  npm install -g yarn
 
 ADD common/package.json ${APP_BASE}/theia/package.json
+
+USER root
+
+RUN apt-get -qq update && apt-get -qq install --yes --no-install-recommends make g++
+
+USER ${NB_USER}
 
 RUN . "$NVM_DIR/nvm.sh" && cd ${APP_BASE}/theia && THEIA_ELECTRON_SKIP_REPLACE_FFMPEG=1 yarn 
 
