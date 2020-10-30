@@ -40,7 +40,7 @@ $ sha256sum sysbox_0.2.1-0.ubuntu-focal_amd64.deb
 ```
 
 3) Stop and eliminate all running Docker containers. Refer to the
-[detailed](docs/user-guide/install.md) installation process for information
+[detailed](https://github.com/nestybox/sysbox/blob/master/docs/user-guide/install.md) installation process for information
 on how to avoid impacting existing containers.
 
 ```console
