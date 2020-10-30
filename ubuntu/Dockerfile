@@ -24,7 +24,9 @@ RUN apt-get -qq install --yes wget make g++ sudo vim
 
 RUN wget --quiet -O - https://deb.nodesource.com/gpgkey/nodesource.gpg.key |  apt-key add - && DISTRO="bionic" && echo "deb https://deb.nodesource.com/node_10.x $DISTRO main" >> /etc/apt/sources.list.d/nodesource.list && echo "deb-src https://deb.nodesource.com/node_10.x $DISTRO main" >> /etc/apt/sources.list.d/nodesource.list
 
-RUN apt-get -qq update && apt-get -qq install --yes --no-install-recommends less nodejs unzip git-flow > /dev/null && apt-get -qq purge && apt-get -qq clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get -qq update && apt-get -qq install --yes --no-install-recommends less nodejs unzip git-flow locales > /dev/null && apt-get -qq purge && apt-get -qq clean && rm -rf /var/lib/apt/lists/*
+
+RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen &&  echo "LANG=en_US.UTF-8" > /etc/locale.conf &&  locale-gen en_US.UTF-8
 
 EXPOSE 8888
 
@@ -97,5 +99,9 @@ RUN . "$NVM_DIR/nvm.sh" && cd ${APP_BASE}/theia &&  yarn theia build
 
 RUN . "$NVM_DIR/nvm.sh" && yarn cache clean
 
+RUN echo "cd /workspace" >> /home/jovyan/.bashrc
+
 WORKDIR /workspace
+
+
 

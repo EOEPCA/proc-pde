@@ -1,1 +1,2 @@
+#jovyan ALL=(ALL) NOPASSWD:/usr/sbin/service docker *,/bin/chmod 777 /var/run/docker.sock
 jovyan ALL=(ALL) NOPASSWD:ALL

@@ -63,14 +63,6 @@ run into problems during installation, see the [troubleshooting doc](https://git
 ```console
 docker run --runtime=sysbox-runc --rm -it -p 8889:8889 -p 8888:8888 $IMAGE start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
 ```
-```console
-git clone https://github.com/EOEPCA/proc-pde.git
-
-cd proc-pde
-docker-compose build ${IMAGE}-sysbox
-
-docker-compose up ${IMAGE}-sysbox
-```
 
 where `IMAGE` is one of:
 
@@ -90,22 +82,28 @@ The developer has to use the `cwltool` flag `--no-container` when running CWL wo
 docker run --rm -it -p 8889:8889 -p 8888:8888 $IMAGE start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
 ```
 
+where `IMAGE` is one of:
+
+- eoepca/ubuntu-pde:latest
+- eoepca/centos-pde:latest
+- eoepca/debian-pde:latest
+
 or, with `docker-compose`
 
 ```console
 git clone https://github.com/EOEPCA/proc-pde.git
 
 cd proc-pde
-docker-compose build $IMAGE
+docker-compose build $SERVICE
 
-docker-compose up $IMAGE
+docker-compose up $SERVICE
 ```
 
-where `IMAGE` is one of:
+where `SERVICE` is one of:
 
-- eoepca/ubuntu-pde:latest
-- eoepca/centos-pde:latest
-- eoepca/debian-pde:latest
+- ubuntu-pde
+- centos-pde
+- debian-pde
 
 ## Using the PDE
 
