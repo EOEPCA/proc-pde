@@ -97,4 +97,15 @@ WORKDIR /workspace
 
 USER root
 
-RUN service docker start
+RUN usermod -aG sudo jovyan
+
+ADD sysbox/pde-sudo /etc/sudoers.d/pde-sudo
+
+RUN apt-get update && apt-get install -y sudo vim
+
+ADD sysbox/start /usr/bin/start
+
+ENV PATH=/srv/conda/bin:$PATH
+
+USER ${NB_USER}
+
