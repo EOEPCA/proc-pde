@@ -4,8 +4,8 @@ FROM nestybox/ubuntu-bionic-docker:latest
 ENV LC_ALL=en_US.UTF-8 \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US.UTF-8 \
-    SHELL=/bin/bash 
-
+    SHELL=/bin/bash \
+    PATH=/srv/conda/bin:$PATH
 
 ENV NB_USER=jovyan \
     NB_UID=1001 \
@@ -16,9 +16,11 @@ ENV USER=${NB_USER} \
     
 RUN groupadd --gid ${NB_GID} ${NB_USER} && useradd --comment "Default user" --create-home --gid ${NB_GID} --no-log-init --shell /bin/bash --uid ${NB_UID} ${NB_USER}
 
+RUN usermod -aG sudo jovyan
+
 RUN apt-get -qq update && apt-get -qq install --yes apt-utils 
 
-RUN apt-get -qq install --yes wget make g++
+RUN apt-get -qq install --yes wget make g++ sudo vim
 
 RUN wget --quiet -O - https://deb.nodesource.com/gpgkey/nodesource.gpg.key |  apt-key add - && DISTRO="bionic" && echo "deb https://deb.nodesource.com/node_10.x $DISTRO main" >> /etc/apt/sources.list.d/nodesource.list && echo "deb-src https://deb.nodesource.com/node_10.x $DISTRO main" >> /etc/apt/sources.list.d/nodesource.list
 
@@ -35,7 +37,7 @@ ENV NB_PYTHON_PREFIX=${CONDA_DIR}/envs/notebook
 ENV KERNEL_PYTHON_PREFIX=${NB_PYTHON_PREFIX} \
     PATH=${NB_PYTHON_PREFIX}/bin:${CONDA_DIR}/bin:${NPM_DIR}/bin:${PATH}
 
-COPY debian/activate-conda.sh /etc/profile.d/activate-conda.sh
+COPY ubuntu/activate-conda.sh /etc/profile.d/activate-conda.sh
 
 COPY common/environment.yml /tmp/environment.yml
 
@@ -63,7 +65,9 @@ ENV PATH ${HOME}/.local/bin:${PATH}
 
 ENV CONDA_DEFAULT_ENV ${KERNEL_PYTHON_PREFIX}
 
-ADD debian/start /usr/bin/start
+ADD ubuntu/start /usr/bin/start
+
+ADD ubuntu/pde-sudo /etc/sudoers.d/pde-sudo
 
 # setup conda activate/deactivate
 #RUN ${CONDA_DIR}/bin/conda init bash && . ${HOME}/.bashrc
@@ -94,18 +98,4 @@ RUN . "$NVM_DIR/nvm.sh" && cd ${APP_BASE}/theia &&  yarn theia build
 RUN . "$NVM_DIR/nvm.sh" && yarn cache clean
 
 WORKDIR /workspace
-
-USER root
-
-RUN usermod -aG sudo jovyan
-
-ADD sysbox/pde-sudo /etc/sudoers.d/pde-sudo
-
-RUN apt-get update && apt-get install -y sudo vim
-
-ADD sysbox/start /usr/bin/start
-
-ENV PATH=/srv/conda/bin:$PATH
-
-USER ${NB_USER}
 
