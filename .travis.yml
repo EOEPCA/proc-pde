@@ -3,30 +3,24 @@ services:
   - docker
 env:
   global:
-    - IMAGE_NAME_CENTOS=eoepca/centos-pde
-    - IMAGE_NAME_DEBIAN=eoepca/debian-pde
+    - IMAGE_NAME=eoepca/sysbox-pde
     - VERSION=0.5
 
 before_script:
-  - docker pull "$IMAGE_NAME_CENTOS" || true
-  - docker pull "$IMAGE_NAME_DEBIAN" || true
+  - docker pull "$IMAGE_NAME" || true
 script:
-  - docker build -f centos/Dockerfile --pull --cache-from "$IMAGE_NAME_CENTOS" --tag "$IMAGE_NAME_CENTOS" .
-  - docker build -f debian/Dockerfile --pull --cache-from "$IMAGE_NAME_DEBIAN" --tag "$IMAGE_NAME_DEBIAN" .
-  
+  - docker build -f sysbox/Dockerfile --pull --cache-from "$IMAGE_NAME" --tag "$IMAGE_NAME" .
+
 after_script:
   - docker images
 
 before_deploy:
   - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
-  - docker tag "$IMAGE_NAME_CENTOS" "${IMAGE_NAME_CENTOS}:latest"
-  - docker tag "$IMAGE_NAME_CENTOS" "${IMAGE_NAME_CENTOS}:${VERSION}"
-  - docker tag "$IMAGE_NAME_DEBIAN" "${IMAGE_NAME_DEBIAN}:latest"
-  - docker tag "$IMAGE_NAME_DEBIAN" "${IMAGE_NAME_DEBIAN}:${VERSION}"
+  - docker tag "$IMAGE_NAME" "${IMAGE_NAME}:latest"
+  - docker tag "$IMAGE_NAME" "${IMAGE_NAME}:${VERSION}"
 deploy:
   provider: script
   script: 
-    - docker push "${IMAGE_NAME_CENTOS}:latest" && docker push "${IMAGE_NAME_CENTOS}:${VERSION}"
-    - docker push "${IMAGE_NAME_DEBIAN}:latest" && docker push "${IMAGE_NAME_DEBIAN}:${VERSION}"
+    - docker push "${IMAGE_NAME}:latest" && docker push "${IMAGE_NAME}:${VERSION}"
   on:
     branch: master
