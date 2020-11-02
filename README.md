@@ -61,7 +61,7 @@ run into problems during installation, see the [troubleshooting doc](https://git
 5) Run the PDE with:
 
 ```console
-docker run --runtime=sysbox-runc --rm -it -p 8889:8889 -p 8888:8888 $IMAGE start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
+docker run --runtime=sysbox-runc --rm -it -p 8889:8889 -p 80:8888 $IMAGE start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
 ```
 
 where `IMAGE` is one of:
@@ -79,7 +79,7 @@ The developer is able to test the applications and processors locally (i.e. not 
 The developer has to use the `cwltool` flag `--no-container` when running CWL workflows.
 
 ```console
-docker run --rm -it -p 8889:8889 -p 8888:8888 $IMAGE start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
+docker run --rm -it -p 8889:8889 -p 80:8888 $IMAGE start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
 ```
 
 where `IMAGE` is one of:
@@ -109,10 +109,10 @@ where `SERVICE` is one of:
 
 Open the browser at the URL:
 
-- 0.0.0.0:8888 or 127.0.0.1:8888 to access the JupyterLab interface
+- 0.0.0.0 or 127.0.0.1 to access the JupyterLab interface
 
 and 
 
-- 0.0.0.0:8888/theia or 127.0.0.1:8888/theia to access the Theia IDE
+- 0.0.0.0/theia or 127.0.0.1/theia to access the Theia IDE
 
 
