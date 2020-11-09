@@ -24,6 +24,12 @@ As such, hosting the PDE may be done at different levels:
 
 As explained above, this requires hosting the PDE with an Ubuntu host.
 
+0) Install wget and docker
+
+```console
+apt-get update && apt install -y wget docker.io
+```
+
 1) Download the latest Sysbox community-edition package from the
 [release](https://github.com/nestybox/sysbox/releases) page:
 
