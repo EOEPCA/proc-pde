@@ -90,7 +90,7 @@ docker run --rm -it -p 8889:8889 -p 80:8888 $IMAGE start jupyter lab --ip=0.0.0.
 
 where `IMAGE` is one of:
 
-- eoepca/ubuntu-pde:latest (coming soon)
+- eoepca/ubuntu-pde:latest 
 - eoepca/centos-pde:latest (coming soon)
 - eoepca/debian-pde:latest (coming soon)
 
