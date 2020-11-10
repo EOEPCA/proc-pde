@@ -73,8 +73,8 @@ docker run --runtime=sysbox-runc --rm -it -p 8889:8889 -p 80:8888 $IMAGE start j
 where `IMAGE` is one of:
 
 - eoepca/ubuntu-pde:latest
-- eoepca/centos-pde:latest
-- eoepca/debian-pde:latest
+- eoepca/centos-pde:latest (coming soon)
+- eoepca/debian-pde:latest (coming soon)
 
 **Limited deployment process support**
 
@@ -90,26 +90,9 @@ docker run --rm -it -p 8889:8889 -p 80:8888 $IMAGE start jupyter lab --ip=0.0.0.
 
 where `IMAGE` is one of:
 
-- eoepca/ubuntu-pde:latest
-- eoepca/centos-pde:latest
-- eoepca/debian-pde:latest
-
-or, with `docker-compose`
-
-```console
-git clone https://github.com/EOEPCA/proc-pde.git
-
-cd proc-pde
-docker-compose build $SERVICE
-
-docker-compose up $SERVICE
-```
-
-where `SERVICE` is one of:
-
-- ubuntu-pde
-- centos-pde
-- debian-pde
+- eoepca/ubuntu-pde:latest (coming soon)
+- eoepca/centos-pde:latest (coming soon)
+- eoepca/debian-pde:latest (coming soon)
 
 ## Using the PDE
 
