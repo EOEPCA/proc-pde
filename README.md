@@ -24,20 +24,20 @@ As such, hosting the PDE may be done at different levels:
 
 As explained above, this requires hosting the PDE with an Ubuntu host.
 
-0) Install wget and docker
+1) Install wget and docker
 
 ```console
 apt-get update && apt install -y wget docker.io
 ```
 
-1) Download the latest Sysbox community-edition package from the
+2) Download the latest Sysbox community-edition package from the
 [release](https://github.com/nestybox/sysbox/releases) page:
 
 ```console
 $ wget https://github.com/nestybox/sysbox/releases/download/v0.2.1/sysbox_0.2.1-0.ubuntu-focal_amd64.deb
 ```
 
-2) Verify that the checksum of the downloaded file fully matches the expected/published one.
+3) Verify that the checksum of the downloaded file fully matches the expected/published one.
    For example:
 
 ```console
@@ -45,7 +45,7 @@ $ sha256sum sysbox_0.2.1-0.ubuntu-focal_amd64.deb
 126e4963755cdca440579d81409b3f4a6d6ef4c6c2d4cf435052a13468e2c250  sysbox_0.2.1-0.ubuntu-focal_amd64.deb
 ```
 
-3) Stop and eliminate all running Docker containers. Refer to the
+4) Stop and eliminate all running Docker containers. Refer to the
 [detailed](https://github.com/nestybox/sysbox/blob/master/docs/user-guide/install.md) installation process for information
 on how to avoid impacting existing containers.
 
@@ -55,7 +55,7 @@ $ docker rm $(docker ps -a -q) -f
 
 ... if an error is returned, it simply indicates that no existing containers were found.
 
-4) Install the Sysbox package and follow the installer instructions:
+5) Install the Sysbox package and follow the installer instructions:
 
 ```console
 $ sudo apt-get install ./sysbox_0.2.1-0.ubuntu-focal_amd64.deb -y
@@ -64,7 +64,7 @@ $ sudo apt-get install ./sysbox_0.2.1-0.ubuntu-focal_amd64.deb -y
 More information on the installation process can be found [here](https://github.com/nestybox/sysbox/blob/master/docs/user-guide/install.md). If you
 run into problems during installation, see the [troubleshooting doc](https://github.com/nestybox/sysbox/blob/master/docs/user-guide/troubleshoot.md).
 
-5) Run the PDE with:
+6) Run the PDE with:
 
 ```console
 docker run --runtime=sysbox-runc --rm -it -p 8889:8889 -p 80:8888 $IMAGE start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
