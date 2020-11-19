@@ -13,7 +13,7 @@ c.NotebookApp.notebook_dir = '/workspace'
 c.ServerProxy.servers = {
   'theia': {
     'command': [
-      '/home/jovyan/.nvm/versions/node/v12.19.0/bin/yarn',
+      '/home/jovyan/.nvm/versions/node/v12.19.1/bin/yarn',
         'start', 
         '/workspace',
         '--hostname=0.0.0.0',
