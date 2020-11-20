@@ -8,8 +8,8 @@ ENV LC_ALL=en_US.UTF-8 \
     PATH=/srv/conda/bin:$PATH
 
 ENV NB_USER=jovyan \
-    NB_UID=2001 \
-    NB_GID=2000 
+    NB_UID=1001 \
+    NB_GID=101 
     
 ENV USER=${NB_USER} \ 
     HOME=/home/${NB_USER}
