@@ -8,8 +8,8 @@ ENV LC_ALL=en_US.UTF-8 \
     PATH=/srv/conda/bin:$PATH
 
 ENV NB_USER=jovyan \
-    NB_UID=1001 \
-    NB_GID=101 
+    NB_UID=2001 \
+    NB_GID=2000 
     
 ENV USER=${NB_USER} \ 
     HOME=/home/${NB_USER}
@@ -142,7 +142,7 @@ RUN apt-get -qq purge && apt-get -qq clean && rm -rf /var/lib/apt/lists/*
 
 USER ${NB_USER}
 
-ADD ubuntu/jenkins-plugin-manager-2.1.2.jar /workspace/jenkins-plugin-manager-2.1.2.jar
+ADD ubuntu/jenkins-plugin-manager-2.1.2.jar /tmp/jenkins-plugin-manager-2.1.2.jar
 
 ADD ubuntu/jenkins.plugins /tmp/jenkins.plugins.txt
 

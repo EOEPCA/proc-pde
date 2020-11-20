@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+    pde:
+        image: pde
+        container_name: pde-app
+        ports:
+            - 8889:8889
+            - 80:8888
+            - 8081:8081
+        entrypoint: sh -c 'start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""'
+        volumes:
+            - /workspace:/workspace
+

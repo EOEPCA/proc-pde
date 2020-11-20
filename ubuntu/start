@@ -9,6 +9,9 @@ sleep 5
 
 sudo chmod 777 /var/run/docker.sock
 
+# jenkins
+
+
 JAVA_OPTS=-Djenkins.install.runSetupWizard=false
 
 sudo /etc/init.d/jenkins start 
@@ -17,7 +20,9 @@ sleep 5
 
 sudo /etc/init.d/jenkins restart
 
-sudo java -jar /workspace/jenkins-plugin-manager-*.jar --war /usr/share/jenkins/jenkins.war --plugin-download-directory ${JENKINS_HOME}/plugins/ --plugin-file /tmp/jenkins.plugins.txt
+sudo java -jar /tmp/jenkins-plugin-manager-*.jar --war /usr/share/jenkins/jenkins.war --plugin-download-directory ${JENKINS_HOME}/plugins/ --plugin-file /tmp/jenkins.plugins.txt
+
+chown -R jenkins:jenkins .jenkins/
 
 sudo /etc/init.d/jenkins restart 
 
