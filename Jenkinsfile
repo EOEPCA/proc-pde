@@ -7,7 +7,7 @@ pipeline {
         stage('Build & Publish Docker') {
             steps {
                 script {
-                    def app = docker.build("-f", "ubuntu/Dockerfile", dockerTag, ".")
+                    def app = docker.build(dockerTag, "./ubuntu")
                     def mType=getTypeOfVersion(env.BRANCH_NAME)
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-fabricebrito') {
                       app.push("${mType}${dockerNewVersion}")
