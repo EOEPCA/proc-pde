@@ -121,22 +121,10 @@ RUN conda init bash
 
 RUN rm -f /etc/profile.d/activate-conda.sh
 
-#ADD ubuntu/start1 /usr/bin/start
-
-#RUN echo 2.249.3 >> /var/lib/jenkins/jenkins.install.UpgradeWizard.state
-#RUN echo 2.249.3 >> /var/lib/jenkins/jenkins.install.InstallUtil.lastExecVersion
-
-#RUN mkdir -p /var/lib/jenkins/init.groovy.d
-
-#ADD ubuntu/basic-security.groovy /workspace/.jenkins/init.groovy.d/basic-security.groovy
 RUN mkdir /workspace/.jenkins
 
 RUN chown -R jenkins:jenkins /workspace/.jenkins
 
-ADD ubuntu/start /usr/bin/start
-
-# jupyter config
-ADD common/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
 
 RUN apt-get -qq purge && apt-get -qq clean && rm -rf /var/lib/apt/lists/*
 
@@ -147,6 +135,29 @@ ADD ubuntu/jenkins-plugin-manager-2.1.2.jar /tmp/jenkins-plugin-manager-2.1.2.ja
 ADD ubuntu/jenkins.plugins /tmp/jenkins.plugins.txt
 
 RUN conda init bash
+
+USER root
+
+RUN wget --quiet https://dl.minio.io/server/minio/release/linux-amd64/minio && chmod +x minio && mv minio /usr/bin/
+
+RUN wget --quiet https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x mc && mv mc /usr/bin/
+
+RUN mkdir /data
+
+RUN chown -R 1001:101 /data
+
+# S3 config
+ADD common/minio-config.json /home/jovyan/.mc/config.json 
+ADD common/s3cfg /home/jovyan/.s3cfg
+
+RUN chown -R 1001:101 /home/jovyan/.mc /home/jovyan/.s3cfg
+
+# jupyter config
+ADD common/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
+
+ADD ubuntu/start /usr/bin/start
+
+USER ${NB_USER}
 
 WORKDIR /workspace
 

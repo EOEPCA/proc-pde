@@ -17,3 +17,4 @@ dependencies:
   - cwltool
   - jupyter-server-proxy
   - cookiecutter
+  - s3cmd

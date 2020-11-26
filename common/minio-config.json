@@ -1,0 +1,12 @@
+{
+        "version": "10",
+        "aliases": {
+                "s3": {
+                        "url": "http://localhost:9000",
+                        "accessKey": "minioadmin",
+                        "secretKey": "minioadmin",
+                        "api": "S3v4",
+                        "path": "auto"
+                }
+        }
+}
