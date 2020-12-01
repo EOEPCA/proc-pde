@@ -8,15 +8,14 @@ ENV LC_ALL=en_US.UTF-8 \
     PATH=/srv/conda/bin:$PATH
 
 ENV NB_USER=jovyan \
-    NB_UID=1001 \
-    NB_GID=101 
+    NB_UID=1002 \
+    NB_GID=1002
+
     
 ENV USER=${NB_USER} \ 
     HOME=/home/${NB_USER}
     
 RUN groupadd --gid ${NB_GID} ${NB_USER} && useradd --comment "Default user" --create-home --gid ${NB_GID} --no-log-init --shell /bin/bash --uid ${NB_UID} ${NB_USER}
-
-RUN usermod -aG sudo jovyan
 
 RUN apt-get -qq update && apt-get -qq install --yes apt-utils 
 
@@ -53,8 +52,8 @@ ADD common/install-extensions.bash /tmp/install-extensions.bash
 
 RUN chmod 755 /tmp/install-extensions.bash && /tmp/install-extensions.bash
 
-# data
-RUN mkdir -p /workspace/data && chown -R ${NB_USER}:${NB_GID} /workspace
+# workspace
+RUN mkdir -p /workspace && chown -R ${NB_USER}:${NB_GID} /workspace
 
 RUN chown -R ${NB_USER}:${NB_GID} /workspace
 
@@ -67,6 +66,7 @@ ENV CONDA_DEFAULT_ENV ${KERNEL_PYTHON_PREFIX}
 
 
 ADD ubuntu/pde-sudo /etc/sudoers.d/pde-sudo
+RUN chmod 440 /etc/sudoers.d/pde-sudo
 
 # setup conda activate/deactivate
 #RUN ${CONDA_DIR}/bin/conda init bash && . ${HOME}/.bashrc
@@ -144,13 +144,13 @@ RUN wget --quiet https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x 
 
 RUN mkdir /data
 
-RUN chown -R 1001:101 /data
+RUN chown -R 1002:1002 /data
 
 # S3 config
 ADD common/minio-config.json /home/jovyan/.mc/config.json 
 ADD common/s3cfg /home/jovyan/.s3cfg
 
-RUN chown -R 1001:101 /home/jovyan/.mc /home/jovyan/.s3cfg
+RUN chown -R 1002:1002 /home/jovyan/.mc /home/jovyan/.s3cfg
 
 # jupyter config
 ADD common/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
@@ -160,6 +160,3 @@ ADD ubuntu/start /usr/bin/start
 USER ${NB_USER}
 
 WORKDIR /workspace
-
-
-

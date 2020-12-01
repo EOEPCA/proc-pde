@@ -21,8 +21,6 @@ sudo /etc/init.d/jenkins restart
 
 sudo java -jar /tmp/jenkins-plugin-manager-*.jar --war /usr/share/jenkins/jenkins.war --plugin-download-directory ${JENKINS_HOME}/plugins/ --plugin-file /tmp/jenkins.plugins.txt
 
-sudo chown -R jenkins:jenkins .jenkins/
-
 sudo /etc/init.d/jenkins restart 
 
 # theia
@@ -31,6 +29,24 @@ sudo /etc/init.d/jenkins restart
 cd /srv/theia
 
 #yarn start /workspace --hostname 0.0.0.0 --port 8889 & 
+
+###############Start theia##############################
+if [[ ! -L /workspace/package.json  ]]; then
+  ln -s /srv/theia/package.json /workspace/package.json
+fi
+
+if [[ ! -L /srv/theia/src-gen ]]; then
+  ln -s /srv/theia/src-gen /workspace/src-gen
+fi
+
+if [[ ! -d /workspace/.theia ]]; then
+  mkdir /workspace/.theia
+fi
+
+if [[ ! -L /home/jovyan/.theia  ]]; then
+  ln -s /workspace/.theia  /home/jovyan/.theia
+fi
+###############End theia##############################
 
 # minio
 sudo minio server /data &
