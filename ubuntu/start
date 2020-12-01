@@ -21,6 +21,8 @@ sudo /etc/init.d/jenkins restart
 
 sudo java -jar /tmp/jenkins-plugin-manager-*.jar --war /usr/share/jenkins/jenkins.war --plugin-download-directory ${JENKINS_HOME}/plugins/ --plugin-file /tmp/jenkins.plugins.txt
 
+sudo chown -R jenkins:jenkins .jenkins/
+
 sudo /etc/init.d/jenkins restart 
 
 # theia
