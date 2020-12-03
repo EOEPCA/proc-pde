@@ -67,14 +67,8 @@ run into problems during installation, see the [troubleshooting doc](https://git
 6) Run the PDE with:
 
 ```console
-docker run --runtime=sysbox-runc --rm -it -p 8889:8889 -p 80:8888 $IMAGE start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
+docker run -v /workspace:/workspace -v /data:/data --runtime=sysbox-runc --rm -p 8081:8081 -p 80:8888 -p 9000:9000 eoepca/ubuntu-pde:latest start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
 ```
-
-where `IMAGE` is one of:
-
-- eoepca/ubuntu-pde:latest
-- eoepca/centos-pde:latest (coming soon)
-- eoepca/debian-pde:latest (coming soon)
 
 **Limited deployment process support**
 
@@ -85,23 +79,15 @@ The developer is able to test the applications and processors locally (i.e. not 
 The developer has to use the `cwltool` flag `--no-container` when running CWL workflows.
 
 ```console
-docker run --rm -it -p 8889:8889 -p 80:8888 $IMAGE start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
+docker run -v /workspace:/workspace -v /data:/data --rm -p 8081:8081 -p 80:8888 -p 9000:9000 eoepca/ubuntu-pde:latest start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
 ```
-
-where `IMAGE` is one of:
-
-- eoepca/ubuntu-pde:latest 
-- eoepca/centos-pde:latest (coming soon)
-- eoepca/debian-pde:latest (coming soon)
 
 ## Using the PDE
 
 Open the browser at the URL:
 
 - 0.0.0.0 or 127.0.0.1 to access the JupyterLab interface
-
-and 
-
-- 0.0.0.0/theia or 127.0.0.1/theia to access the Theia IDE
+- 0.0.0.0:8081 or 127.0.0.1:8081 to access the Jenkins CI
+- 0.0.0.0:9000 or 127.0.0.1:9000 to access the minIO interface
 
 

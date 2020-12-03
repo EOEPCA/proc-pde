@@ -1,0 +1,400 @@
+#!/bin/bash
+
+# ---------------------------------------------------------------------------- #
+# Copyright 2020, Terradue S.r.l.                                              #
+#                                                                              #
+# Licensed under the Apache License, Version 2.0 (the "License"); you may      #
+# not use this file except in compliance with the License. You may obtain      #
+# a copy of the License at                                                     #
+#                                                                              #
+# http://www.apache.org/licenses/LICENSE-2.0                                   #
+#                                                                              #
+# Unless required by applicable law or agreed to in writing, software          #
+# distributed under the License is distributed on an "AS IS" BASIS,            #
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.     #
+# See the License for the specific language governing permissions and          #
+# limitations under the License.                                               #
+# ---------------------------------------------------------------------------- #
+
+export GIT_MERGE_AUTOEDIT=no
+
+bold=$(tput bold)
+normal=$(tput sgr0)
+
+application="$( basename $PWD)"
+
+# ---------------------------------------------------------------------------- #
+# Informative messages section
+# ---------------------------------------------------------------------------- #
+MASTER_BRANCH="master"
+DEVELOP_BRANCH="develop"
+SUPPORT_URL="https://helpdesk.terradue.com"
+
+DONE="\e[32mDONE\e[39m"
+SEPARATOR="***"
+
+CHEERS=\
+"Have a nice day!"
+SUPPORT_MESSAGE=\
+"\nPlease contact the Terradue's Support team at ${SUPPORT_URL}, providing this\n\
+command output.\n"
+ABORT_MESSAGE=\
+"Sorry, we need to abort the release."
+CONFIRMATION_MESSAGE=\
+"Do you want to proceed? (Y/n)"
+ENTER_MESSAGE=\
+"Please press [ENTER]"
+ABANDON_MESSAGE=\
+"We stopped the release process, as requested.\n${CHEERS}"
+NO_SYNC_MESSAGE=\
+"\nWe won't push the local changes to the remote repository, as requested.\n\
+Please ensure that you push them later.\n${CHEERS}"
+VERSION_ISSUE_MESSAGE=\
+"Sorry, there's a problem with the release number you provided.\n\
+Please ensure that it's compliant with the Semantic Versioning Specification\n\
+http://semver.org/\nExamples are: 1.0, 1.0.0, 2.0.1.3\n"
+VERSION_RELATIONSHIP_ISSUE=\
+"Sorry, it seems that the development version provided is lower than the version\n\
+being released.\n\
+Please refer to the Semantic Versioning Specification http://semver.org/"
+CI_MESSAGE=\
+"We are going to push the local changes to the remote repository.\n\
+This will enable the Continuous Integration chain to package and deploy\n\
+the Application '${application}'"
+ASK_RELEASE_MESSAGE=\
+"Please type the version number you want to release and press [ENTER] "
+
+HOSTNAME_INFO="Hostname: ${HOSTNAME}"
+PWD_INFO="Working directory: ${PWD}"
+
+STAGE_1="-> Stage 1. Checking your repository '${application}'"
+STAGE_2="-> Stage 2. Setting the release version"
+STAGE_3="-> Stage 3. Releasing '${application}'"
+STAGE_4="-> Stage 4. Syncronising the remote repository"
+# ---------------------------------------------------------------------------- #
+# End of Informative messages section
+# ---------------------------------------------------------------------------- #
+
+# ---------------------------------------------------------------------------- #
+# Exit codes
+# ---------------------------------------------------------------------------- #
+SUCCESS=0
+ERR_TOOL=10
+ERR_GIT=12
+# ---------------------------------------------------------------------------- #
+# End of Exit codes
+# ---------------------------------------------------------------------------- #
+
+
+# ---------------------------------------------------------------------------- #
+# Functions section
+# ---------------------------------------------------------------------------- #
+
+function logthis() {
+  
+    echo -e "$1"
+}
+
+function vercomp () {
+  
+    if [[ $1 == $2 ]]
+    then
+        return 0
+    fi
+    local IFS=.
+    local i ver1=($1) ver2=($2)
+    # fill empty fields in ver1 with zeros
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+    do
+        ver1[i]=0
+    done
+    for ((i=0; i<${#ver1[@]}; i++))
+    do
+        if [[ -z ${ver2[i]} ]]
+        then
+            # fill empty fields in ver2 with zeros
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]}))
+        then
+            return 1
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]}))
+        then
+            return 2
+        fi
+    done
+    
+    return 0
+}
+
+function nextversion () {
+  
+    local version=${1}
+    
+    v_list=($( echo ${version} | tr '.' ' ' ))
+    v_major=${v_list[0]}
+    v_minor=${v_list[1]}
+    v_patch=${v_list[2]}
+    
+    # By default, we suggest to increase the minor version.
+    # Further behaviours can be configured, if required.
+    v_minor=$((v_minor + 1))
+    
+    if [ ! -z ${v_patch} ]; then
+      v_patch=0
+      echo "${v_major}.${v_minor}.${v_patch}"
+    else
+      echo "${v_major}.${v_minor}"
+    fi
+}
+
+function check_preconditions () {
+
+    git config --global push.default matching
+        
+    # Check tools availability
+    for tool in git git-flow sed 
+    do
+        which ${tool}
+        
+        if [ ${?} -ne 0 ]
+        then
+            logthis "The tool ${tool} seems not available"
+            logthis "${ABORT_MESSAGE}"
+            logthis "${HOSTNAME_INFO}"
+            logthis "${PWD_INFO}"
+            logthis "${SUPPORT_MESSAGE}"
+            
+            return ${ERR_TOOL}
+        fi
+    done
+        
+    # Check .git
+    stat .git
+    if [ ${?} -ne 0 ]
+    then
+        logthis "It doesn't seem to be a git repository"
+        logthis "${ABORT_MESSAGE}"
+        logthis "${HOSTNAME_INFO}"
+        logthis "${PWD_INFO}"
+        logthis "${SUPPORT_MESSAGE}"
+        
+        return ${ERR_GIT}
+    fi
+
+}
+
+
+function main () {
+    
+    # ------------------------------------------------------------------------ #
+    # Stage 0 - Checking preconditions
+    # ------------------------------------------------------------------------ #
+    check_preconditions > /dev/null 2>&1 || return ${?}
+    
+    # ------------------------------------------------------------------------ #
+    # Stage 1 - Syncronizing repository
+    # We syncronise the local repository with the remote one.
+    # We also initialise Gitflow.
+    # ------------------------------------------------------------------------ #
+    
+    clear
+    logthis "${SEPARATOR}"
+    logthis "*** Application release for ${bold}'${application}'${normal}"
+    logthis "***"
+    logthis "${STAGE_1}"
+    logthis "${ENTER_MESSAGE}"
+
+    read -n 1
+
+    for branch in ${MASTER_BRANCH} ${DEVELOP_BRANCH}; do
+  
+        logthis "--> Syncronizing your ${bold}'${branch}'${normal} branch"
+
+        git checkout ${branch}
+        res=$? 
+
+        if [ ${res} -ne 0 ]; then
+            logthis "It seems there's a problem in checking out your '${branch}' branch"
+            logthis "${ABORT_MESSAGE}"
+            logthis "${HOSTNAME_INFO}"
+            logthis "${PWD_INFO}"
+            logthis "${SUPPORT_MESSAGE}"
+            exit ${res}
+        fi
+
+        git pull
+        res=$?
+
+        if [ ${res} -ne 0 ]; then
+            logthis "It seems there's a problem in pulling the latest changes from your remote '${branch}' branch"
+            logthis "${ABORT_MESSAGE}"
+            logthis "${HOSTNAME_INFO}"
+            logthis "${PWD_INFO}"
+            logthis "${SUPPORT_MESSAGE}"
+            exit ${res}
+        fi
+
+    done
+
+    logthis "--> Initialising the Git flow process"
+
+    git flow init -d
+    res=$?
+
+    if [ ${res} -ne 0 ]; then
+  
+        logthis "We were not able to initialise the Git flow process for your Application."
+        logthis "${ABORT_MESSAGE}"
+        logthis "${HOSTNAME_INFO}"
+        logthis "${PWD_INFO}"
+        git status
+        logthis "${SUPPORT_MESSAGE}"
+        exit ${res}
+    fi
+    
+    # ------------------------------------------------------------------------ #
+    # End of Stage 1
+    # ------------------------------------------------------------------------ #
+
+    # ------------------------------------------------------------------------ #
+    # Stage 2 - Setting versions
+    # We ask the user to provide the release and development versions.
+    # We provide a suggestion in both cases
+    # ------------------------------------------------------------------------ #
+    clear
+    logthis "${SEPARATOR}"
+    logthis "${STAGE_1} ${DONE}"
+    logthis "${STAGE_2}"
+    
+    local release_version
+    local dev_version
+
+   
+    previous_release=$( git describe --abbrev=0 )
+    
+    [ -z "$previous_release" ] && suggested_release=0.1 || suggested_release=$( nextversion ${previous_release} )
+
+    while :
+    do
+        logthis "${ASK_RELEASE_MESSAGE}"
+        logthis "(default: ${suggested_release}):"
+        read release_version
+
+        if [[ -z ${release_version} ]]; then
+            release_version=${suggested_release}
+            break;
+        else 
+            if [[ !(${release_version} =~ ^[0-9]+(\.*[0-9]+)+$) ]]; then
+                logthis "${VERSION_ISSUE_MESSAGE}"
+            else
+                break;
+            fi
+        fi
+    done
+                
+   
+    
+    # ------------------------------------------------------------------------ #
+    # End of Stage 2
+    # ------------------------------------------------------------------------ #
+    
+    # ------------------------------------------------------------------------ #
+    # Stage 3 - Performing the Gitflow process
+    # We perform the actual Gitflow release process, setting the pom.xml file
+    # and Jenkinsfile, if present.
+    # ------------------------------------------------------------------------ #
+
+    clear
+
+    logthis "${SEPARATOR}"
+    logthis "${STAGE_1} ${DONE}"
+    logthis "${STAGE_2} ${DONE}"
+    logthis "${STAGE_3}"
+
+    logthis "You are going to release the version: ${release_version}"
+    
+    logthis "${CONFIRMATION_MESSAGE}"
+    read -n 2 answer
+
+    if [ ${answer} != "Y" ]; then
+        logthis "${ABANDON_MESSAGE}"
+        exit -1
+    fi
+
+    git flow release start ${release_version}
+    res=$?
+
+    if [ ${res} -ne 0 ]; then
+        logthis "It seems there's a problem in starting your release '${release_version}'"
+        logthis "${ABORT_MESSAGE}"
+        logthis "${HOSTNAME_INFO}"
+        logthis "${PWD_INFO}"
+        logthis "${SUPPORT_MESSAGE}"
+        exit ${res}
+    fi
+
+    git commit -am "Set release version ${release_version}"
+
+    git flow release finish -m "${release_version}" ${release_version}
+    res=$?
+
+    if [ ${res} -ne 0 ]; then
+        logthis "It seems there's a problem in finishing your release '${release_version}'"
+        logthis "${ABORT_MESSAGE}"
+        logthis "${HOSTNAME_INFO}"
+        logthis "${PWD_INFO}"
+        logthis "${SUPPORT_MESSAGE}"
+        exit ${res}
+    fi
+    
+    # ------------------------------------------------------------------------ #
+    # End of Stage 3
+    # ------------------------------------------------------------------------ #
+    
+    # ------------------------------------------------------------------------ #
+    # Stage 4 - Pushing the changes
+    # We push the changes on the remote repository.
+    # In this way, the CI server is able to trigger the build of the released
+    # code.
+    # ------------------------------------------------------------------------ #
+
+    clear
+    logthis "${SEPARATOR}"
+    logthis "${STAGE_1} ${DONE}"
+    logthis "${STAGE_2} ${DONE}"
+    logthis "${STAGE_3} ${DONE}"
+    logthis "${STAGE_4}"
+
+    logthis "${CI_MESSAGE}"
+
+    logthis "${CONFIRMATION_MESSAGE}"
+    read -n 2 answer
+
+    if [ ${answer} != "Y" ]; then
+        logthis "${NO_SYNC_MESSAGE}"
+        exit -1
+    fi
+
+    git push
+    git push --tags
+    git checkout develop
+    
+    clear
+    logthis "${SEPARATOR}"
+    logthis "${STAGE_1} ${DONE}"
+    logthis "${STAGE_2} ${DONE}"
+    logthis "${STAGE_3} ${DONE}"
+    logthis "${STAGE_4} ${DONE}"
+    
+    # ------------------------------------------------------------------------ #
+    # End of Stage 4
+    # ------------------------------------------------------------------------ #
+}
+
+# ---------------------------------------------------------------------------- #
+# End of functions section
+# ---------------------------------------------------------------------------- #
+
+main || exit $?

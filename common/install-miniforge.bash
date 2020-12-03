@@ -49,21 +49,25 @@ jupyter nbextension enable --py --sys-prefix ipyleaflet
 
 echo "installing notebook env:"
 cat /tmp/environment.yml
-conda env create -p ${NB_PYTHON_PREFIX} -f /tmp/environment.yml
+#conda env create -p ${NB_PYTHON_PREFIX} -f /tmp/environment.yml
+conda env update -n base --file /tmp/environment.yml
 
 # Install jupyter-offline-notebook to allow users to download notebooks
 # after the server connection has been lost
 # This will install and enable the extension for jupyter notebook
-${NB_PYTHON_PREFIX}/bin/python -m pip install jupyter-offlinenotebook==0.1.0
+#${NB_PYTHON_PREFIX}/bin/python -m pip install jupyter-offlinenotebook==0.1.0
+python -m pip install jupyter-offlinenotebook==0.1.0
 # and this installs it for lab. Keep going if the lab version is incompatible
 # with the extension
-${NB_PYTHON_PREFIX}/bin/jupyter labextension install jupyter-offlinenotebook || true
+#${NB_PYTHON_PREFIX}/bin/jupyter labextension install jupyter-offlinenotebook || true
+jupyter labextension install jupyter-offlinenotebook || true
 
 # empty conda history file,
 # which seems to result in some effective pinning of packages in the initial env,
 # which we don't intend.
 # this file must not be *removed*, however
-echo '' > ${NB_PYTHON_PREFIX}/conda-meta/history
+#echo '' > ${NB_PYTHON_PREFIX}/conda-meta/history
+echo '' > /srv/conda/conda-meta/history
 
 if [[ -f /tmp/kernel-environment.yml ]]; then
     # install kernel env and register kernelspec
@@ -88,7 +92,7 @@ rm -rf /root/.cache
 chown -R $NB_USER:$NB_GID ${CONDA_DIR}
 
 conda list -n root
-conda list -p ${NB_PYTHON_PREFIX}
+#conda list -p ${NB_PYTHON_PREFIX}
 
 
 

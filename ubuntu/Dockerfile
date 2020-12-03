@@ -157,6 +157,13 @@ ADD common/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
 
 ADD ubuntu/start /usr/bin/start
 
+# additional utilities
+ADD ubuntu/git-flow /usr/bin/git-flow
+
+ADD common/release-flow /usr/bin/release-flow
+
+RUN chmod 755 /usr/bin/git-flow && chmod 755 /usr/bin/release-flow
+
 USER ${NB_USER}
 
 WORKDIR /workspace
