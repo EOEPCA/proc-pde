@@ -17,7 +17,7 @@ pipeline {
                 script {
                     def app = docker.build(dockerTag, "-f ./ubuntu/Dockerfile .")
                     def mType=getTypeOfVersion(env.BRANCH_NAME)
-                    docker.withRegistry(${dockerrepo}, 'docker-repo-creds') {
+                    docker.withRegistry("${dockerrepo}", 'docker-repo-creds') {
                       app.push("${mType}${dockerNewVersion}")
                       app.push("${mType}latest")
                     }
