@@ -9,7 +9,7 @@ pipeline {
                 script {
                     def app = docker.build(dockerTag, "-f ./ubuntu/Dockerfile .")
                     def mType=getTypeOfVersion(env.BRANCH_NAME)
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-fabricebrito') {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-repo-creds') {
                       app.push("${mType}${dockerNewVersion}")
                       app.push("${mType}latest")
                     }
