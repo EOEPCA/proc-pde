@@ -67,7 +67,7 @@ run into problems during installation, see the [troubleshooting doc](https://git
 6) Run the PDE with:
 
 ```console
-docker run -v /workspace:/workspace -v /data:/data --runtime=sysbox-runc --rm -p 8081:8081 -p 80:8888 -p 9000:9000 eoepca/ubuntu-pde:latest start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
+docker run -v /workspace:/workspace -v /data:/data --runtime=sysbox-runc --rm -p 8081:8081 -p 80:9001 -p 8888:8888 -p 9000:9000 eoepca/ubuntu-pde:latest start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
 ```
 
 **Limited deployment process support**
