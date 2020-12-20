@@ -79,7 +79,7 @@ The developer is able to test the applications and processors locally (i.e. not 
 The developer has to use the `cwltool` flag `--no-container` when running CWL workflows.
 
 ```console
-docker run -v /workspace:/workspace -v /data:/data --rm -p 8081:8081 -p 80:8888 -p 9000:9000 eoepca/ubuntu-pde:latest start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
+docker run -v /workspace:/workspace -v /data:/data --rm -p 8081:8081 -p 80:9001 -p 8888:8888 -p 9000:9000 eoepca/ubuntu-pde:latest start jupyter lab --ip=0.0.0.0 --port=8888 --config=/etc/jupyter/jupyter_notebook_config.py --no-browser --notebook-dir /workspace --allow-root --NotebookApp.token=""
 ```
 
 ## Using the PDE
