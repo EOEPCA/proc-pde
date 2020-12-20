@@ -84,10 +84,6 @@ docker run -v /workspace:/workspace -v /data:/data --rm -p 8081:8081 -p 80:9001 
 
 ## Using the PDE
 
-Open the browser at the URL:
-
-- 0.0.0.0 or 127.0.0.1 to access the JupyterLab interface
-- 0.0.0.0:8081 or 127.0.0.1:8081 to access the Jenkins CI
-- 0.0.0.0:9000 or 127.0.0.1:9000 to access the minIO interface
+Open the browser at the URL 0.0.0.0 or 127.0.0.1 to access the landing page
 
 
