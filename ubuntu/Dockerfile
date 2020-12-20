@@ -11,8 +11,8 @@ ENV LC_ALL=en_US.UTF-8                                                  \
     NB_USER=jovyan                                                      \
     NB_UID=1002                                                         \
     NB_GID=1002                                                         \
-    USER=jovyan                                                     \ 
-    HOME=/home/jovyan                                               \
+    USER=jovyan                                                         \ 
+    HOME=/home/jovyan                                                   \
     CONDA_DIR=/srv/conda/                                               \
     APP_BASE=/srv 
     
@@ -121,8 +121,7 @@ ADD common/s3cfg /home/jovyan/.s3cfg
 ADD ubuntu/git-flow /usr/bin/git-flow
 ADD common/release-flow /usr/bin/release-flow
 
-# add start script
-ADD ubuntu/start /usr/bin/start
+
 
 # jupyter config
 ADD common/jupyter_notebook_config.py /etc/jupyter/jupyter_notebook_config.py
@@ -154,10 +153,9 @@ ADD common/package.json ${APP_BASE}/theia/package.json
 
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.5/install.sh | bash
 
-RUN set -x && \
-    . "$NVM_DIR/nvm.sh" &&  \
-    npm config delete prefix && \
-    nvm install 12.20.0 || exit 0 
+RUN . "$NVM_DIR/nvm.sh" &&                                              \
+    npm config delete prefix &&                                         \
+    nvm install 12.20.0 
     
        
 RUN . "$NVM_DIR/nvm.sh" &&                                              \
@@ -170,3 +168,27 @@ RUN . "$NVM_DIR/nvm.sh" &&                                              \
     yarn theia build &&                                                 \
     yarn cache clean &&                                                 \
     echo "cd /workspace" >> /home/jovyan/.bashrc
+
+# add start script
+ADD ubuntu/start /usr/bin/start
+
+# web site
+
+RUN . "$NVM_DIR/nvm.sh" &&                                              \
+    npm install -g node-static &&                                       \
+    pip install mkdocs
+
+USER root
+
+RUN mkdir -p /var/www &&                                                \
+    chown -R ${NB_USER}:${NB_GID} /var/www
+
+COPY --chown=1002:1002 common/docs /var/www/
+
+USER ${NB_USER}
+
+RUN cd /var/www/ &&                                                  \
+    mkdocs build &&                                                  \
+    rm -fr src && rm mkdocs.yml                                               
+    
+

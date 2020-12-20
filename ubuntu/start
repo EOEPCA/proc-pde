@@ -63,4 +63,8 @@ fi
 # minio
 sudo minio server /data &
 
+# website
+
+static -p 9001 -a 0.0.0.0 /var/www/public/ &
+
 exec "$@"
