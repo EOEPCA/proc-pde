@@ -185,6 +185,9 @@ RUN mkdir -p /var/www &&                                                \
 
 COPY --chown=1002:1002 common/docs /var/www/
 
+# patch conda persistence
+RUN rm -fr /srv/conda/envs
+
 USER ${NB_USER}
 
 RUN cd /var/www/ &&                                                  \
