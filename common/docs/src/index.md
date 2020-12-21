@@ -17,20 +17,20 @@
 <table>
 <tr>
 <td><a href="#" onclick="javascript:window.open(window.location.origin + ':9000')"><img src="img/minio.png" alt="" style="width:100px;height:100px;"></a></td>
-<td>Store - Powered by MinIO</td>
+<td>Store EO data and results - Powered by MinIO</td>
 </tr>
 </table>
 
 <table>
 <tr>
 <td><a href="#" onclick="javascript: window.open(window.location.origin + ':8081/jenkins')" ><img src="img/jenkins.svg" alt="" style="width:100px;height:100px;"></a></td>
-<td>Build - Powered by Jenkins</td>
+<td>Build your code with Continuous Integration - Powered by Jenkins</td>
 </tr>
 </table>
 
 <table>
 <tr>
 <td><a href="#" onclick="javascript: window.open(window.location.origin + ':8081/jenkins/blue')" ><img src="img/jenkins.svg" alt="" style="width:100px;height:100px;"></a></td>
-<td>Build pipeline - Powered by Jenkins Blue Ocean</td>
+<td>Build your code with Continuous Integration pipeline - Powered by Jenkins Blue Ocean</td>
 </tr>
 </table>

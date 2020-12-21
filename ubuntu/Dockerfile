@@ -176,7 +176,7 @@ ADD ubuntu/start /usr/bin/start
 
 RUN . "$NVM_DIR/nvm.sh" &&                                              \
     npm install -g node-static &&                                       \
-    pip install mkdocs
+    pip install mkdocs-material
 
 USER root
 
@@ -191,4 +191,5 @@ RUN cd /var/www/ &&                                                  \
     mkdocs build &&                                                  \
     rm -fr src && rm mkdocs.yml                                               
     
+
 

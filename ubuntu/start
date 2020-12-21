@@ -56,7 +56,7 @@ if [[ ! -d /workspace/.conda_envs ]]; then
 fi
 
 if [[ ! -L /srv/conda/envs  ]]; then
-  ln -s /workspace/.conda_envs  /srv/conda/envs
+  ln -s /workspace/.conda_envs/  /srv/conda/envs
 fi
 
 
