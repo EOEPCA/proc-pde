@@ -5,7 +5,7 @@ set -ex
 # make sure we don't do anything funky with user's $HOME
 # since this is run as root
 unset HOME
-
+NB_PYTHON_PREFIX=/srv/conda
 # required extensions
 ${NB_PYTHON_PREFIX}/bin/jupyter nbextension enable --py --sys-prefix widgetsnbextension
 

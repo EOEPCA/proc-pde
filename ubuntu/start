@@ -50,7 +50,21 @@ if [[ ! -L /home/jovyan/.theia  ]]; then
 fi
 ###############End theia##############################
 
+# conda envs
+if [[ ! -d /workspace/.conda_envs ]]; then
+  mkdir /workspace/.conda_envs
+fi
+
+if [[ ! -L /srv/conda/envs  ]]; then
+  ln -s /workspace/.conda_envs/  /srv/conda/envs
+fi
+
+
 # minio
 sudo minio server /data &
+
+# website
+
+static -p 9001 -a 0.0.0.0 /var/www/public/ &
 
 exec "$@"
