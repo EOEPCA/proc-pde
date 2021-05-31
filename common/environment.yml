@@ -18,3 +18,10 @@ dependencies:
   - jupyter-server-proxy
   - cookiecutter
   - s3cmd
+  - awscli
+  - pde-opensearch-client
+  - stars-copy
+  - pde-context
+  - pip
+  - pip:
+    - awscli-plugin-endpoint

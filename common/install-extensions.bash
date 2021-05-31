@@ -42,10 +42,11 @@ ${NB_PYTHON_PREFIX}/bin/jupyter labextension install @jupyter-widgets/jupyterlab
 ${NB_PYTHON_PREFIX}/bin/pip install bash_kernel
 ${NB_PYTHON_PREFIX}/bin/python -m bash_kernel.install
 
+## EOEPCA-382
 # quick open
-${NB_PYTHON_PREFIX}/bin/pip install jupyterlab-quickopen
-${NB_PYTHON_PREFIX}/bin/jupyter labextension install @parente/jupyterlab-quickopen
-${NB_PYTHON_PREFIX}/bin/jupyter serverextension enable jupyterlab_quickopen --sys-prefix --py
+## ${NB_PYTHON_PREFIX}/bin/pip install jupyterlab-quickopen
+## ${NB_PYTHON_PREFIX}/bin/jupyter labextension install @parente/jupyterlab-quickopen
+## ${NB_PYTHON_PREFIX}/bin/jupyter serverextension enable jupyterlab_quickopen --sys-prefix --py
 
 # table of contents
 ${NB_PYTHON_PREFIX}/bin/jupyter labextension install @jupyterlab/toc
