@@ -1,5 +1,5 @@
 def dockerTag = 'eoepca/ubuntu-pde'
-def dockerNewVersion = 0.8
+def dockerNewVersion = 0.9
 
 
 
@@ -17,7 +17,7 @@ pipeline {
                 script {
                     def app = docker.build(dockerTag, "-f ./ubuntu/Dockerfile .")
                     def mType=getTypeOfVersion(env.BRANCH_NAME)
-                    docker.withRegistry("${dockerrepo}", 'docker-repo-creds') {
+                    docker.withRegistry("${dockerrepo}", 'eoepca-docker-repo-creds') {
                       app.push("${mType}${dockerNewVersion}")
                       app.push("${mType}latest")
                     }
