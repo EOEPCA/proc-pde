@@ -34,7 +34,10 @@ RUN apt-get -qq update &&                                               \
     vim                                                                 \
     tree                                                                \
     file                                                                \
-    unzip
+    unzip                                                               \
+    pass                                                                \
+    gnupg2                                                              \
+    file
 
 RUN wget --quiet -O - https://deb.nodesource.com/gpgkey/nodesource.gpg.key |  apt-key add - && \
     echo "deb https://deb.nodesource.com/node_10.x bionic main" >> /etc/apt/sources.list.d/nodesource.list && \
