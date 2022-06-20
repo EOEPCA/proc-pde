@@ -2,6 +2,7 @@
 
 [![Project Status: Abandoned – Initial development has started, but there has not yet been a stable, usable release; the project has been abandoned and the author(s) do not intend on continuing development.](https://www.repostatus.org/badges/latest/abandoned.svg)](https://www.repostatus.org/#abandoned)
 
+**See the [PDE Helm Chart](https://github.com/EOEPCA/helm-charts/tree/main/charts/pde-jupyterhub), which is under active development, and supercedes the obsolete version of the PDE that is provided in this repository. The PDE Helm Chart provides a fully containerised version of the PDE that is cloud-native and designed for Kubernetes.**
 
 The Processor Development Environment provides a rich, interactive environment in which processing algorithms and services are developed, tested, debugged and ultimately packaged so that they can be deployed to the platform and published via the marketplace.
 
